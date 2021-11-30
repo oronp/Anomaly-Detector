@@ -3,6 +3,7 @@ import java.lang.Math;
 
 public class StatLib {
 
+	// simple average
 	public static float avg(float[] x){
 		float count = 0;
 		for(int i = 0; i < x.length; i++){
@@ -11,6 +12,7 @@ public class StatLib {
 		return (count/(float)x.length);
 	}
 
+	// returns the variance of X and Y
 	public static float var(float[] x){
 		float count1 = 0, count2 = 0;
 		float n = 1/(float)x.length;
@@ -23,6 +25,7 @@ public class StatLib {
 		return (count1 - count2);
 	}
 
+	// returns the covariance of X and Y
 	public static float cov(float[] x, float[] y){
 		float[] xy = new float[x.length];
 		for(int i = 0; i < x.length; i++){
@@ -31,10 +34,12 @@ public class StatLib {
 		return (avg(xy) - avg(x)*avg(y));
 	}
 
+	// returns the Pearson correlation coefficient of X and Y
 	public static float pearson(float[] x, float[] y){
 		return (float)(cov(x,y)/(Math.pow(var(x),0.5)*(Math.pow(var(y),0.5))));
 	}
 
+	// performs a linear regression and returns the line equation
 	public static Line linear_reg(Point[] points){
 		float x[] = new float[points.length];
 		float y[] = new float[points.length];
