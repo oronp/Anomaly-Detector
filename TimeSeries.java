@@ -3,7 +3,7 @@ import java.io.*;
 import java.util.*;
 
 public class TimeSeries {
-	HashMap<String,Vector<Double>> timeTable = new HashMap<>();
+	HashMap<String,Vector<Float>> timeTable = new HashMap<>();
 	int numberOfColumns;
 
 	public TimeSeries(String csvFileName) throws FileNotFoundException {
@@ -19,7 +19,7 @@ public class TimeSeries {
 			this.numberOfColumns = headers.length; //updating the number of columns according to the number of headlines...
 
 			for(int i = 0; i < numberOfColumns; i++){
-				Vector<Double> vec = new Vector<>();
+				Vector<Float> vec = new Vector<>();
 				timeTable.put(headers[i],vec);
 			} //iniziallize all the collumns of the maps with the name and empty vector.
 
@@ -27,7 +27,7 @@ public class TimeSeries {
 				fullLine = scanner.next();
 				numbers = fullLine.split(",");
 				for(int i = 0; i < numberOfColumns; i++){
-					timeTable.get(headers[i]).add(Double.parseDouble(numbers[i]));
+					timeTable.get(headers[i]).add(Float.parseFloat(numbers[i]));
 				}
 			}
 
