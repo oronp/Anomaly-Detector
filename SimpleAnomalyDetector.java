@@ -69,9 +69,9 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 		for(int i = 0; i < correlatedFeaturesList.size(); i++){
 			corrent = correlatedFeaturesList.get(i);
 			for(int j = 0; j < ts.timeTable.get(corrent.feature1).size(); j++){
-				point = new Point(ts.timeTable.get(corrent.feature1).get(i),ts.timeTable.get(corrent.feature2).get(i));
+				point = new Point(ts.timeTable.get(corrent.feature1).get(j),ts.timeTable.get(corrent.feature2).get(j));
 				if(StatLib.dev(point,corrent.lin_reg) > corrent.threshold){
-					AnomalyReport anomalyReport = new AnomalyReport(corrent.feature1 + "-" + corrent.feature2,j);
+					AnomalyReport anomalyReport = new AnomalyReport(corrent.feature1 + "-" + corrent.feature2,j + 1);
 					this.anomalyReports.add(anomalyReport);
 				}
 			}

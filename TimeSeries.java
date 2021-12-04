@@ -6,7 +6,7 @@ public class TimeSeries {
 	HashMap<String,Vector<Float>> timeTable = new HashMap<>();
 	int numberOfColumns;
 
-	public TimeSeries(String csvFileName) throws FileNotFoundException {
+	public TimeSeries(String csvFileName){
 		Scanner scanner;
 		String fullLine = null;
 		String[] headers = null;
