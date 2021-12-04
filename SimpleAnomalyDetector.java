@@ -83,23 +83,3 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 		return this.correlatedFeaturesList;
 	}
 }
-
-
-//	public CorrelatedFeatures checkCorrel(TimeSeries ts, String correlTo,Set<String> used){
-//		float max = 0,tmp;
-//		String header = null;
-//		for(String k:ts.timeTable.keySet()){
-//			if(ts.timeTable.keySet().contains(k))
-//				continue;
-//			tmp = Math.abs(StatLib.pearson(vecToFlow(ts.timeTable.get(k)),vecToFlow(ts.timeTable.get(correlTo))));
-//			if(tmp > max) {
-//				max = tmp;
-//				header = k;
-//			}
-//		}
-//		CorrelatedFeatures toto = new CorrelatedFeatures(correlTo,header,max,null,this.ThresHold);
-//		if(max > this.ThresHold)
-//			return toto;
-//		return null;
-//	}
-
