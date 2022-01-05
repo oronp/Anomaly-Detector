@@ -30,7 +30,7 @@ public class TimeSeries {
 					timeTable.get(headers[i]).add(Float.parseFloat(numbers[i]));
 				}
 			}
-
+			scanner.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
