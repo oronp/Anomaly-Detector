@@ -1,7 +1,7 @@
 package test;
 
 import java.util.ArrayList;
-
+import java.util.Scanner;
 import test.Commands.Command;
 import test.Commands.DefaultIO;
 
@@ -17,9 +17,10 @@ public class CLI {
 		commands=new ArrayList<>();
 		// example: commands.add(c.new ExampleCommand());
 		// implement
+		commands.add(c.new PrintMenuCommand());
 	}
 	
 	public void start() {
-		// implement
+		commands.get(0).execute();
 	}
 }
