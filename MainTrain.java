@@ -38,8 +38,8 @@ public class MainTrain {
 	
 	
 	public static void main(String[] args) {
-		//FileIO fio=new FileIO("input.txt", "output.txt");
-		ScreenIO fio = new ScreenIO();
+		FileIO fio=new FileIO("input.txt", "output.txt");
+		//ScreenIO fio = new ScreenIO();
 		CLI cli=new CLI(fio);
 		cli.start();
 		fio.close();

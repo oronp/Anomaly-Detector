@@ -1,8 +1,6 @@
 package test;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -74,14 +72,111 @@ public class Commands {
 				"3. detect anomalies\n" +
 				"4. display results\n" +
 				"5. upload anomalies and analyze results\n" +
-				"6. exit");}
+				"6. exit\n");}
 
 		@Override
 		public void execute() {
 			dio.write(description);
 		}
 	}
-	
+
+	public class UploadTime extends Command{
+
+		public UploadTime() {
+			super("Please upload your local train CSV file.\n");}
+
+		@Override
+		public void execute() {
+			dio.write(description);
+			String fileName = "csvFile.txt";
+			if(CreateFile(fileName)) {
+				File csvFile = new File(fileName);
+				FillCSV(fileName);
+				dio.write("Upload complete.\n");
+			}else{
+				dio.write("hmmm we had a problem in you csvFile...");
+			}
+		}
+
+		public boolean CreateFile(String FileName){
+			try {
+				File csvFile = new File(FileName);
+				if (csvFile.createNewFile())
+					return true;
+				if(csvFile.exists())
+					return true;
+			} catch (IOException e) {
+				System.out.println("Can't open csvFile");
+				e.printStackTrace();
+			}
+			return false;
+		}
+
+		public void FillCSV(String fileName){
+			FileIO csvWriter = new FileIO(fileName,fileName);
+			String line = dio.readText();
+			while(!line.equals("done")){
+				csvWriter.write(line);
+				csvWriter.write("\n");
+				line = dio.readText();
+			}
+		}
+	}
+
+	public class AlgoSettings extends Command{
+
+		public AlgoSettings() {
+			super("algorithm settings");}
+
+		@Override
+		public void execute() {
+			//need to put here the command activity.
+		}
+	}
+
+	public class DetectAnomalies extends Command{
+
+		public DetectAnomalies() {
+			super("detect anomalies");}
+
+		@Override
+		public void execute() {
+			//need to put here the command activity.
+		}
+	}
+
+	public class DisplayResults extends Command{
+
+		public DisplayResults() {
+			super("display results");}
+
+		@Override
+		public void execute() {
+			//need to put here the command activity.
+		}
+	}
+
+	public class UploadAndAnalize extends Command{
+
+		public UploadAndAnalize() {
+			super("upload anomalies and analyze results");}
+
+		@Override
+		public void execute() {
+			//need to put here the command activity.
+		}
+	}
+
+	public class Exit extends Command{
+
+		public Exit() {
+			super("exit");}
+
+		@Override
+		public void execute() {
+			//need to put here the command activity.
+		}
+	}
 	// implement here all other commands
 	
 }
