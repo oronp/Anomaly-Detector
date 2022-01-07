@@ -6,9 +6,11 @@ public class SimpleAnomalyDetector implements TimeSeriesAnomalyDetector {
 	float ThresHold = 0.9f;
 	List<CorrelatedFeatures> correlatedFeaturesList = new ArrayList<>();
 	List<AnomalyReport> anomalyReports = new ArrayList<>();
+	int totalTimeSteps;
 
 	@Override
 	public void learnNormal(TimeSeries ts) {
+		totalTimeSteps = ts.totalTimeSteps;
 		Set<String> used = new HashSet<>();
 		float maxPears = 0,tmp;
 		String header = null;

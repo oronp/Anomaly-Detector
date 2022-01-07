@@ -30,7 +30,7 @@ public class CLI {
 		commands.get(0).execute();
 		String action = dio.readText();
 		//action = "1";
-		while(action != "6") {
+		while(!action.equals("6")) {
 			switch (action) {
 				case "1":
 					commands.get(1).execute();
@@ -56,7 +56,7 @@ public class CLI {
 					commands.get(6).execute();
 					break;
 				default:
-					System.out.println("Wrong Button - type again");
+					System.out.println("whoops");
 			}
 			action = dio.readText();
 		}

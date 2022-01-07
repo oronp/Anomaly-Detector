@@ -1,6 +1,9 @@
 package test;
 
 import java.io.*;
+import java.math.RoundingMode;
+import java.sql.Time;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -154,7 +157,11 @@ public class Commands {
 
 		@Override
 		public void execute() {
-			//need to put here the command activity.
+			TimeSeries trainTable = new TimeSeries("anoamlyTrain.csv");
+			TimeSeries testTable = new TimeSeries("anomalyTest.csv");
+			anomalyDetector.learnNormal(trainTable);
+			anomalyDetector.detect(testTable);
+			dio.write("anomaly detection complete.\n");
 		}
 	}
 
@@ -165,7 +172,11 @@ public class Commands {
 
 		@Override
 		public void execute() {
-			//need to put here the command activity.
+			for(int i = 0; i < anomalyDetector.anomalyReports.size(); i++){
+				dio.write(anomalyDetector.anomalyReports.get(i).timeStep + "\t");
+				dio.write(anomalyDetector.anomalyReports.get(i).description + "\n");
+			}
+			dio.write("Done\n");
 		}
 	}
 
@@ -176,8 +187,61 @@ public class Commands {
 
 		@Override
 		public void execute() {
-			//need to put here the command activity.
+			dio.write("Please upload your local anomalies file.\n");
+			//float P = StraightReports();//P => number of anomaly reports.
+			float N = anomalyDetector.totalTimeSteps - anomalyDetector.anomalyReports.size();//total time without reports
+			ArrayList<Long> inputValue = inputToValue();
+			float truePositive = TruePositive(inputValue);
+			float falsePositive = (inputValue.size()/2) - truePositive;
+			float P = inputValue.size()/2;
+			dio.write("Upload complete.\n");
+			DecimalFormat df = new DecimalFormat("#.###");
+			//df.setRoundingMode(RoundingMode.CEILING);
+			dio.write("True Positive Rate: " + df.format(truePositive/P) + "\n");
+			dio.write("False Positive Rate: " + df.format(falsePositive/N) + "\n");
 		}
+
+		public ArrayList<Long> inputToValue(){
+			String[] strings = dio.readText().split(",");
+			ArrayList<Long> timeSteps = new ArrayList<>();
+			while(!strings[0].equals("done")){
+				timeSteps.add(Long.parseLong(strings[0]));
+				timeSteps.add(Long.parseLong(strings[1]));
+				strings = dio.readText().split(",");
+			}
+			return timeSteps;
+		}//even place means start and odd place means ends.
+
+		public int TruePositive(ArrayList<Long> input){
+			int numOfFPs = 0;
+			long current;
+			for(int i = 0; i < input.size(); i+=2){
+				for(int j = 0; j < anomalyDetector.anomalyReports.size(); j++){
+					current = anomalyDetector.anomalyReports.get(j).timeStep;
+					if(current > input.get(i) && current < input.get(i+1)) {
+						numOfFPs++;
+						break;
+					}
+				}
+			}
+			return numOfFPs;
+		}
+
+		public int StraightReports(){
+			if(anomalyDetector.anomalyReports.size() == 0)
+				return 0;
+			int straightReports = 1;
+			String current = anomalyDetector.anomalyReports.get(0).description;
+			for(int i = 1; i < anomalyDetector.anomalyReports.size(); i++){
+				if(!anomalyDetector.anomalyReports.get(i).description.equals(current)
+				|| anomalyDetector.anomalyReports.get(i).timeStep != (anomalyDetector.anomalyReports.get(i-1).timeStep + 1)) {
+					straightReports++;
+					current = anomalyDetector.anomalyReports.get(i).description;
+				}
+			}
+			return straightReports;
+		}//checks the number of straight reports -> straight reports means reports that
+		//has the same headline and keeps the time steps.
 	}
 
 	public class Exit extends Command{
@@ -187,9 +251,7 @@ public class Commands {
 
 		@Override
 		public void execute() {
-			//need to put here the command activity.
+
 		}
 	}
-	// implement here all other commands
-	
 }
