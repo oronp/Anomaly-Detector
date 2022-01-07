@@ -10,12 +10,13 @@ public class CLI {
 	ArrayList<Command> commands;
 	DefaultIO dio;
 	Commands c;
+	SimpleAnomalyDetector anomalyDetector = new SimpleAnomalyDetector();
 	
 	public CLI(DefaultIO dio) {
 		this.dio=dio;
 		c=new Commands(dio); 
 		commands=new ArrayList<>();
-		// example: commands.add(c.new ExampleCommand());
+
 		commands.add(c.new PrintMenuCommand());
 		commands.add(c.new UploadTime());
 		commands.add(c.new AlgoSettings());
@@ -28,7 +29,8 @@ public class CLI {
 	public void start() {
 		commands.get(0).execute();
 		String action = dio.readText();
-		//while(action != "5") {
+		//action = "1";
+		while(action != "6") {
 			switch (action) {
 				case "1":
 					commands.get(1).execute();
@@ -56,6 +58,7 @@ public class CLI {
 				default:
 					System.out.println("Wrong Button - type again");
 			}
-		//}
+			action = dio.readText();
+		}
 	}
 }

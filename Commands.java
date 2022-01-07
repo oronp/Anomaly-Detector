@@ -13,12 +13,40 @@ public class Commands {
 		public void write(String text);
 		public float readVal();
 		public void write(float val);
-
+		default public boolean CreateFile(String FileName){
+			try {
+				File csvFile = new File(FileName);
+				if (csvFile.createNewFile())
+					return true;
+				if(csvFile.exists())
+					return true;
+			} catch (IOException e) {
+				System.out.println("Can't open file");
+				e.printStackTrace();
+			}
+			return false;
+		}
+		default public int FillCSV(String fileName) {
+			int totalLines = 0;
+			FileIO csvWriter = new FileIO(fileName, fileName);
+			String line = this.readText();
+			while (!line.equals("done")) {
+				csvWriter.write(line);
+				csvWriter.write("\n");
+				line = this.readText();
+				totalLines++;
+				if (totalLines % 100 == 0)
+					csvWriter.out.flush();
+			}
+			csvWriter.close();
+			return totalLines;
+		}
 		// you may add default methods here
 	}
 	
 	// the default IO to be used in all commands
 	DefaultIO dio;
+	SimpleAnomalyDetector anomalyDetector = new SimpleAnomalyDetector();
 
 	public Commands(DefaultIO dio) {
 		this.dio=dio;
@@ -40,7 +68,7 @@ public class Commands {
 	// Command abstract class
 	public abstract class Command{
 		protected String description;
-		
+
 		public Command(String description) {
 			this.description=description;
 		}
@@ -83,42 +111,20 @@ public class Commands {
 	public class UploadTime extends Command{
 
 		public UploadTime() {
-			super("Please upload your local train CSV file.\n");}
+			super("Uploading the test and train anomalies lists.\n");}
 
 		@Override
 		public void execute() {
-			dio.write(description);
-			String fileName = "csvFile.txt";
-			if(CreateFile(fileName)) {
-				File csvFile = new File(fileName);
-				FillCSV(fileName);
+			dio.write("Please upload your local train CSV file.\n");
+			String trainFile = "anoamlyTrain.csv";
+			String testFile = "anomalyTest.csv";
+			if(dio.CreateFile(trainFile) && dio.CreateFile(testFile)) {
+				dio.FillCSV(trainFile);
+				dio.write("Upload complete.\nPlease upload your local test CSV file.\n");
+				dio.FillCSV(testFile);
 				dio.write("Upload complete.\n");
 			}else{
 				dio.write("hmmm we had a problem in you csvFile...");
-			}
-		}
-
-		public boolean CreateFile(String FileName){
-			try {
-				File csvFile = new File(FileName);
-				if (csvFile.createNewFile())
-					return true;
-				if(csvFile.exists())
-					return true;
-			} catch (IOException e) {
-				System.out.println("Can't open csvFile");
-				e.printStackTrace();
-			}
-			return false;
-		}
-
-		public void FillCSV(String fileName){
-			FileIO csvWriter = new FileIO(fileName,fileName);
-			String line = dio.readText();
-			while(!line.equals("done")){
-				csvWriter.write(line);
-				csvWriter.write("\n");
-				line = dio.readText();
 			}
 		}
 	}
@@ -130,7 +136,14 @@ public class Commands {
 
 		@Override
 		public void execute() {
-			//need to put here the command activity.
+			dio.write("The current correlation threshold is ");
+			dio.write(anomalyDetector.ThresHold + "\n" + "Type a new threshold\n");
+			float userChoice = dio.readVal();
+			if(userChoice >= 0 && userChoice <= 1){
+				anomalyDetector.ThresHold = userChoice;
+			}	else	{
+				dio.write("please choose a value between 0 and 1.");
+			}
 		}
 	}
 

@@ -33,6 +33,7 @@ public class FileIO implements DefaultIO{
 
 	@Override
 	public void write(String text) {
+		out.flush();
 		out.print(text);
 	}
 
