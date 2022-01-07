@@ -56,7 +56,6 @@ public class CLI {
 					commands.get(6).execute();
 					break;
 				default:
-					System.out.println("whoops");
 			}
 			action = dio.readText();
 		}

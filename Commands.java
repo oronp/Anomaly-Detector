@@ -188,15 +188,15 @@ public class Commands {
 		@Override
 		public void execute() {
 			dio.write("Please upload your local anomalies file.\n");
-			//float P = StraightReports();//P => number of anomaly reports.
-			float N = anomalyDetector.totalTimeSteps - anomalyDetector.anomalyReports.size();//total time without reports
 			ArrayList<Long> inputValue = inputToValue();
-			float truePositive = TruePositive(inputValue);
-			float falsePositive = (inputValue.size()/2) - truePositive;
 			float P = inputValue.size()/2;
+			float N = anomalyDetector.totalTimeSteps - TotalErrorTime(inputValue);//total time without reports
+			float truePositive = TruePositive(inputValue);
+			float falsePositive = StraightReports() - truePositive;
 			dio.write("Upload complete.\n");
-			DecimalFormat df = new DecimalFormat("#.###");
-			//df.setRoundingMode(RoundingMode.CEILING);
+			DecimalFormat df = new DecimalFormat("#0.0");
+			df.setMaximumFractionDigits(3);
+			df.setRoundingMode(RoundingMode.DOWN);
 			dio.write("True Positive Rate: " + df.format(truePositive/P) + "\n");
 			dio.write("False Positive Rate: " + df.format(falsePositive/N) + "\n");
 		}
@@ -218,13 +218,21 @@ public class Commands {
 			for(int i = 0; i < input.size(); i+=2){
 				for(int j = 0; j < anomalyDetector.anomalyReports.size(); j++){
 					current = anomalyDetector.anomalyReports.get(j).timeStep;
-					if(current > input.get(i) && current < input.get(i+1)) {
+					if(current >= input.get(i) && current <= input.get(i+1)) {
 						numOfFPs++;
 						break;
 					}
 				}
 			}
 			return numOfFPs;
+		}
+
+		public int TotalErrorTime(ArrayList<Long> input){
+			int total = 0;
+			for(int i = 0; i < input.size(); i+=2){
+				total+= (input.get(i+1) - input.get(i));
+			}
+			return total;
 		}
 
 		public int StraightReports(){
