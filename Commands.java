@@ -38,8 +38,7 @@ public class Commands {
 				csvWriter.write("\n");
 				line = this.readText();
 				totalLines++;
-				if (totalLines % 100 == 0)
-					csvWriter.out.flush();
+				csvWriter.out.flush();
 			}
 			csvWriter.close();
 			return totalLines;
@@ -77,19 +76,6 @@ public class Commands {
 		}
 		
 		public abstract void execute();
-	}
-	
-	// Command class for example:
-	public class ExampleCommand extends Command{
-
-		public ExampleCommand() {
-			super("this is an example of command");
-		}
-
-		@Override
-		public void execute() {
-			dio.write(description);
-		}		
 	}
 
 	//Command for the openning and menu for the user.
@@ -254,12 +240,14 @@ public class Commands {
 
 	public class Exit extends Command{
 
-		public Exit() {
-			super("exit");}
+		public Exit(){
+			super("close");
+		}
 
 		@Override
-		public void execute() {
-
+		public void execute(){
+			dio.write("bye");
 		}
 	}
+
 }
